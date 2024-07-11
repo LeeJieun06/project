@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preload stylesheet" as="style" href='https://fonts.googleapis.com/css2?family=Gothic+A1:wght@200&family=Nanum+Gothic&family=Nanum+Myeongjo&family=Noto+Sans+KR:wght@400&family=Roboto:wght@100&display=swap'>
+    <title>지은의 chatbot</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
+        @import url('https://fonts.googleapis.com/css?family=Do+Hyeon:400');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Freeman&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Freeman&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Permanent+Marker&display=swap');
+        *,
+        *:before,
+        *:after {
+            box-sizing: border-box;
+        }
+
+        ul {
+            margin: 0;
+            padding: 15px 15px 0 15px;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            margin: 0 auto;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .chat {
+            width: 100%;
+            color: #434651;
+            border: 2px solid #EEEEEE;
+            max-width: 430px;
+            margin: 0 auto;
+
+            border-radius: 15px;
+            background-color: white;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        }
+
+        .chat .chat-header {
+            display: flex;
+            padding: 5px 0 7px 0;
+            border-bottom: 4px solid white;
+            align-items: center;
+            justify-content: center;
+            background-color: #e1edeb;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .chat .chat-header .chat-about {
+            margin-left: 20px;
+            font-size: 35px;
+            font-family: "Permanent Marker", sans-serif;
+            text-align: center;
+            color: #FFFFFF;
+            text-shadow: -1px -1px 0 #8fe3d5, 1px -1px 0 #8fe3d5, -1px 1px 0 #8fe3d5, 1px 1px 0 #8fe3d5;
+        }
+
+        .chat .chat-history {
+            padding: 10px 0px 10px 0px;
+            border-bottom: 5px solid white;
+            scrollbar-width: none;
+            overflow-y: auto;
+            height: 575px;
+            font-family: 'Noto Sans KR', sans-serif; 
+        }
+
+        /* Chrome, Safari, Edge */
+        .chat .chat-history::-webkit-scrollbar {
+            display: none;
+        }
+
+        .chat .chat-history .message-data {
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .chat .chat-history .message-data-time {
+            font-size: 14px;
+        }
+
+        .chat .chat-history .message {
+            color: white;
+            padding: 18px 20px;
+            line-height: 22px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            width: 100%;
+            position: relative;
+            font-family: 'Noto Sans KR', sans-serif; 
+        }
+
+        .chat .chat-history .my-message {
+            background: #F1F1F1;
+            padding: 5px 10px;
+            font-size: 15px;
+            width: 90%;
+            color: black;
+            font-family: 'Noto Sans KR', sans-serif; 
+        }
+
+        .chat .chat-history .other-message {
+            border: 1px solid #8A8A8A;
+            padding: 5px 10px;
+            font-size: 15px;
+            width: 90%;
+            color: black;
+            font-family: 'Noto Sans KR', sans-serif; 
+        }
+
+        .chat .chat-history .other-message:after {
+            border-bottom-color: #8A8A8A;
+            left: 17%;
+            font-family: 'Noto Sans KR', sans-serif; 
+        }
+
+        .chat .chat-message {
+            padding: 5px 15px 0px 15px;
+            background-color:#e1edeb;
+            border-radius: 0 0 15px 15px; /* 하단 모서리만 라운드 처리 */
+        }
+
+        .chat .chat-message textarea {
+            width: 100%;
+            border: none;
+            padding: 10px 20px;
+            font: 14px/22px 'Noto Sans KR', sans-serif;
+            border-radius: 15px;
+            resize: none;
+            margin-bottom: 20px;
+        }
+
+        .chat .chat-message textarea:focus {
+            outline: none;
+            border: 2px solid #2fc9d4;
+        }
+
+        .align-right {
+            text-align:right;
+            float: right;
+        }
+
+        .float-right {
+            float: right;
+            margin-right: 10px;
+        }
+
+        .float-left {
+            float: left;
+            margin-left: 10px;
+        }
+
+        .clearfix:after {
+            visibility: hidden;
+            display: block;
+            font-size: 0;
+            content: " ";
+            clear: both;
+        }
+
+        .face-image {
+            position: relative;
+            top: 0.5rem;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+        }
+
+        .loading-dots {
+            display: inline-block;
+            height: 10px;
+            text-align: center;
+            font-size: 10px;
+        }
+
+        .loading-dots span {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            margin: 0 2px;
+            background-color: #555;
+            border-radius: 50%;
+            opacity: 0;
+            animation: loading-dots 1.5s infinite;
+        }
+
+        .loading-dots span:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .loading-dots span:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes loading-dots {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .info {
+            display: block;
+            height: 1.2rem;
+            font-size: 12px;
+            color: #1A237E;
+            font-weight: bolder;
+        }
+
+        .blink {
+            animation-name: blink;
+            animation-duration: 2s;
+            animation-delay: 0.5s;
+            animation-iteration-count: 50;
+        }
+
+        .drag-over {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        #file {
+            display: none;
+        }
+
+        .center-image {
+            text-align: center;
+        }
+
+        .python-code {
+            background-color: black;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            padding: 0 10px;
+            border-radius: 10px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+</head>
+
+<body>
+    <div class="container clearfix">
+        <div class="chat">
+            <div class="chat-header clearfix">
+                <img style="width:60px; border-radius:50px; margin-left:10px;" src="{{ url_for('static', filename='images/logo.png') }}" alt="avatar" />
+                <div class="chat-about">Travel Planner</div>
+            </div>
+            <div class="chat-history">
+                <ul style="list-style:none;"></ul>
+            </div>
+            <div class="chat-message">
+                <span class="info"></span>
+                <textarea name="message-to-send" id="message-to-send" placeholder="메시지를 입력하세요." rows="1"></textarea>
+                <div>
+                    <input type="file" id="image-upload" style="display:none">
+                    <button id="send" style="display:none">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <audio id="audioPlayer" controls style="display:none"></audio>
+    <script id="message-template" type="text/x-handlebars-template">
+        {% raw %}
+        <li class="clearfix">
+            <div class="message-data align-right">
+                <span class="message-data-name">나</span>
+                <span class="message-data-time">Today</span> &nbsp; &nbsp;
+            </div>
+            <div class="message my-message float-right">
+                {{messageOutput}}
+                {{#if imageUrl}}
+                <img src="{{imageUrl}}" alt="Uploaded Image" style="max-width: 250px; display: block; margin: 10px;">
+                {{/if}}
+            </div>
+        </li>
+        {% endraw %}
+    </script>
+    <script id="message-response-template" type="text/x-handlebars-template">
+        {% raw %}
+        <li class="clearfix">
+            <div class="message-data">
+                <img src="/static/images/chat.png" class="face-image">
+                <span class="message-data-name">여행봇</span>
+                <span class="message-data-time">Today</span>
+            </div>
+            <div class="message other-message float-left">
+                {{#if loading}}
+                <div class="loading-dots"><span></span><span></span><span></span></div>
+                {{else}}
+                {{{messageOutput}}}
+                {{#if imageUrl}}
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <img src="{{imageUrl}}" alt="Uploaded Image" style="max-width: 200px; display: block; margin: 10px;">
+                </div>
+                {{/if}}
+                {{#if pythonCode}}
+                사용한 파이썬 코드:
+                <div class="python-code">{{pythonCode}}</div>
+                {{/if}}
+                {{/if}}
+            </div>
+        </li>
+        {% endraw %}
+    </script>
+    <script>
+        function fetchWithTimeout(resource, options) {
+            const { timeout = 300000 } = options; // 기본 타임아웃 120초(2분) 설정
+            
+            const abortController = new AbortController();
+            const id = setTimeout(() => abortController.abort(), timeout);
+            
+            return fetch(resource, {
+                ...options,
+                signal: abortController.signal
+            }).then(response => {
+                clearTimeout(id);
+                return response;
+            }).catch(error => {
+                clearTimeout(id);
+                throw error;
+            });
+        }
+
+        (function () {
+            async function fetchResponse(formData) {
+                try {
+                    const response = await fetchWithTimeout("/chat-api", {
+                        method: "POST",
+                        body: formData,
+                        timeout: 300000 // 2분 타임아웃 설정
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    return await response.json();
+                } catch (error) {
+                    console.error('Request failed:', error);
+                    throw error; // 에러 처리 로직, 필요에 따라 수정
+                }
+            }
+
+            var chat = {
+                messageToSend: '',
+                init: function () {
+                    this.cacheDOM();
+                    this.bindEvents();
+                },
+                initDragAndDrop: function () {
+                    var self = this; // 현재 chat 객체를 self 변수에 저장
+                    var dropArea = document.querySelector('body');
+                    if (!dropArea) {
+                        console.error('Drop area not found');
+                        return;
+                    }
+
+                    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                        dropArea.addEventListener(eventName, this.preventDefaults, false);
+                    });
+
+                    dropArea.addEventListener('drop', this.handleDrop.bind(this), false);
+                },
+                preventDefaults: function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                },
+
+                handleDrop: function (e) {
+                    let dt = e.dataTransfer;
+                    let files = dt.files;
+
+                    this.handleFiles(files);
+                },
+
+                handleFiles: function (files) {
+                    ([...files]).forEach(this.uploadFile.bind(this));
+                },
+
+                uploadFile: function (file) {
+                    var fileInput = document.getElementById('image-upload');
+                    var dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    fileInput.files = dataTransfer.files;
+
+                    this.previewImage();
+                },
+                cacheDOM: function () {
+                    this.chatHistory = document.querySelector('.chat-history');
+                    this.button = document.querySelector('#send');
+                    this.textarea = document.getElementById('message-to-send');
+                    this.chatHistoryList = this.chatHistory.querySelector('ul');
+                },
+                bindEvents: function () {
+                    this.button.addEventListener('click', this.addMessage.bind(this));
+                    this.textarea.addEventListener('keyup', this.addMessageEnter.bind(this));
+                    document.getElementById('image-upload').addEventListener('change', this.previewImage.bind(this));
+                },
+                render: function (message, imageUrl, pythonCode, isUser) {
+                    const templateId = isUser ? "#message-template" : "#message-response-template";
+
+                    const template = Handlebars.compile(document.querySelector(templateId).innerHTML);
+
+                    const context = {
+                        messageOutput: message,
+                        imageUrl: imageUrl,
+                        pythonCode: pythonCode,
+                        time: this.getCurrentTime()
+                    };
+
+                    let htmlString = template(context)
+
+                    this.chatHistoryList.insertAdjacentHTML('beforeend', htmlString);
+                    this.scrollToBottom();
+
+                    if (isUser) {
+                        this.textarea.value = '';
+                    }
+                },
+                showResponse: function (message) {
+                    this.scrollToBottom();
+                    const templateId = "#message-response-template";
+                    let templateSource = document.querySelector(templateId).innerHTML;
+                    const template = Handlebars.compile(templateSource);
+                    const context = {
+                        messageOutput: message,
+                        time: this.getCurrentTime()
+                    };
+                    let htmlString = template(context);
+
+                    document.querySelector('.chat-history > ul > li:last-child').innerHTML = htmlString
+                    this.scrollToBottom();
+                },
+                waitSeconds: async function (delay) {
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            resolve();
+                        }, delay + this.waitTime);
+                        this.waitTime = 0;
+                    });
+                },
+                showBubbleAfterSeconds: async function (delay) {
+                    return new Promise(resolve => {
+                        setTimeout(() => {
+                            const templateId = "#message-response-template";
+                            const template = Handlebars.compile(document.querySelector(templateId).innerHTML);
+                            const context = {
+                                loading: true,
+                                time: this.getCurrentTime()
+                            };
+                            var loadingHtml = template(context);
+                            this.chatHistoryList.insertAdjacentHTML('beforeend', loadingHtml);
+                            this.scrollToBottom();
+                            resolve();
+                        }, delay);
+                    });
+                },
+                addMessage: async function () {
+                    const formData = new FormData();
+                    this.messageToSend = this.textarea.value.trim();
+                    formData.append('message', this.messageToSend);
+                    const imageFile = document.getElementById('image-upload').files[0];
+                    if (imageFile) {
+                        formData.append('image', imageFile);
+                    }
+
+                    this.render(this.messageToSend, null, null, true);
+
+                    const showBubblePromise = this.showBubbleAfterSeconds(500);
+                    const waitPromise = this.waitSeconds(3500);
+                    const response = await fetchResponse(formData);
+                    await showBubblePromise;
+                    await waitPromise;
+
+                    if (response.response_message) {
+                        this.showResponse(response.response_message);
+                    }
+                    if (response.response_python_code) {
+                        this.render('', null, response.response_python_code, false);
+                    }
+                    if (response.audio) {
+                        let audioPlayer = document.getElementById('audioPlayer');
+                        audioPlayer.src = response.audio;
+                        this.showResponse("[오디오 재생]");
+                        audioPlayer.play();
+                    }
+                    if (response.image) {
+                        this.render('', response.image, null, false);
+                    }
+                    document.getElementById('image-upload').value = '';
+                },
+                addMessageEnter: function (event) {
+                    if (event.keyCode === 13) {
+                        this.addMessage();
+                    }
+                },
+                scrollToBottom: function () {
+                    this.chatHistory.scrollTop = this.chatHistory.scrollHeight;
+                },
+                getCurrentTime: function () {
+                    let currentDate = new Date();
+                    return currentDate.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
+
+                },
+                previewImage: function() {
+                    this.scrollToBottom();
+                    const imageFile = document.getElementById('image-upload').files[0];
+                    if (imageFile) {
+                        const imageUrl = URL.createObjectURL(imageFile);
+                        this.render('', imageUrl, null, true);
+                    }
+                },
+            };
+            chat.init();
+            chat.initDragAndDrop();
+        })();
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var dropArea = document.querySelector('body');
+
+            if (!dropArea) {
+                console.error('Drop area not found');
+                return;
+            }
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight(e) {
+                dropArea.classList.add('drag-over');
+            }
+
+            function unhighlight(e) {
+                dropArea.classList.remove('drag-over');
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+
+        });
+
+    </script>
+</body>
+
+</html>
