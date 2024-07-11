@@ -1,3 +1,4 @@
+2024/05/석사 학위 구현 프로젝트
 개발환경: Groom IDE, Python, Flask, Chromedriver, Selenium...
 사용한 패키지 버전은 논문에 언급되어 있다.
 Groom IDE에서 Flask 컨테이너 생성후 프로젝트 생성하기.
