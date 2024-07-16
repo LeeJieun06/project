@@ -19,3 +19,9 @@
 -이때, 가상 클라우드 환경인 Groom IDE에서 Flask서버와 챗봇 웹을 구현하였으며,
 
 https://firstcontainer-mxmwz.run.goorm.site/chat-app에서 기능을 확인하였다. (현재는 서버를 OFF하여 사용불가능)
+
+3. TextMining
+
+-개인과제: 분석을 위해 네이버 영화평을 크롤링하여 수집하였고 CNN, LSMT, CNN-LSTM 앙상블 모델을 사용하여 감성분석을 진행하였다.
+
+-팀프로젝트: 
